@@ -19,6 +19,10 @@ class Forecast {
       this.hourly = new DataBlock(obj.hourly)
       this.daily = new DataBlock(obj.daily)
     }
+
+    public weatherNow (): string {
+      return `It is ${this.currently.temperature}° Celsius, with a ${this.currently.precipProbability}% chance of rain.`
+    }
 }
 
 export default Forecast

@@ -1,6 +1,7 @@
 import * as rp from 'request-promise-native'
 
 import Forecast from './model/forecast'
+import Point from './model/point'
 
 class Darksky {
   private url = 'https://api.darksky.net/forecast/'
@@ -14,10 +15,11 @@ class Darksky {
     this.units = units || this.units
   }
 
-  public async getData (lat: string, long: string): Promise<Forecast> {
+  public async getData (point: Point): Promise<Forecast> {
     return rp.get({
-      url: `${this.url}${this.apiKey}/${lat},${long}?lang=${this.lang}&units=${this.units}`
-    }).then((result): Forecast => new Forecast(JSON.parse(result)))
+      url: `${this.url}${this.apiKey}/${point.latitude},${point.longitude}?lang=${this.lang}&units=${this.units}`,
+      json: true
+    }).then((result): Forecast => { return new Forecast(result) })
   }
 }
 
