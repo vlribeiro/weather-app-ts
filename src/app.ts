@@ -8,21 +8,29 @@ class App {
   private darksky: Darksky
   private mapbox: Mapbox
 
-  public start (): void {
+  public async start (): Promise<Forecast> {
     dotenv.config()
     this.darksky = new Darksky(process.env.DARKSKY_KEY)
     this.mapbox = new Mapbox(process.env.MAPBOX_KEY)
 
-    this.getWeather()
-      .then((f): void => console.log(f.weatherNow()))
+    try {
+      const forecast = await this.getWeather()
+      console.log(forecast.weatherNow())
+
+      return forecast
+    } catch (e) {
+      console.log(e.message)
+    }
   }
 
   private async getWeather (): Promise<Forecast> {
-    var mbResponse = await this.mapbox
+    const mbResponse = await this.mapbox
       .getData('Rio de Janeiro')
 
-    return this.darksky
+    const dsResponse = this.darksky
       .getData(mbResponse.features[0].center)
+
+    return dsResponse
   }
 }
 
